@@ -1,0 +1,19 @@
+name: auto-queue
+# Daily at 05:30 UTC (11:00 IST, same as the old local crontab): queue the next
+# batch of companies for every user with auto-queue enabled. The 10-minute
+# send-batch workflow then drains the queue through the day.
+on:
+  schedule:
+    - cron: '30 5 * * *'
+  workflow_dispatch:
+
+jobs:
+  queue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger auto-queue
+        run: |
+          curl -fsS --max-time 180 "${CRON_URL%/send-batch}/auto-queue" -H "x-cron-secret: $CRON_SECRET"
+        env:
+          CRON_URL: ${{ secrets.CRON_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
