@@ -1,5 +1,5 @@
 name: send-batch
-# Hits the Recly mail scheduler endpoint every ~10 minutes.
+# Hits the Recly mail scheduler endpoint every ~10 minutes (batched sends).
 # The endpoint URL and secret live in Actions secrets (CRON_URL, CRON_SECRET).
 on:
   schedule:
