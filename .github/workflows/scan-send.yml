@@ -1,0 +1,18 @@
+name: scan-send
+# Daily 06:00 UTC (11:30 IST): scan the newest jobs for software-dev roles open
+# to <=3 yrs and auto-mail matching recruiters, for users who enabled it.
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger scan-send
+        run: |
+          curl -fsS --max-time 300 "${CRON_URL%/send-batch}/scan-send" -H "x-cron-secret: $CRON_SECRET"
+        env:
+          CRON_URL: ${{ secrets.CRON_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
