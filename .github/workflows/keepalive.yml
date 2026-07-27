@@ -1,0 +1,23 @@
+name: keepalive
+# GitHub suspends scheduled workflows after 60 days without repo activity.
+# A weekly bot commit keeps the schedule alive.
+on:
+  schedule:
+    - cron: '0 5 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  heartbeat:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Commit heartbeat
+        run: |
+          date -u +"%Y-%m-%dT%H:%M:%SZ" > heartbeat.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add heartbeat.txt
+          git commit -m "heartbeat" && git push
